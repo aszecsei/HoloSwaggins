@@ -286,8 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dbeb89940002248a5c76e30b8ce97e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: 670680f2a43efca469d13b1df1d77085, type: 3}
-  screenShotURL: https://www.argon-key-218614.appspot.com/transcribe/
+  Shader: {fileID: 4800000, guid: 670680f2a43efca469d13b1df1d77085, type: 3}
+  ScreenShotUrl: http://www.argon-key-218614.appspot.com/transcribe/
 --- !u!4 &1779514077
 Transform:
   m_ObjectHideFlags: 0
