@@ -90,19 +90,20 @@ public class PhotoTaker : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 
 		// Encode texture into PNG
-		byte[] bytes = _targetTexture.EncodeToPNG();
-		string image64Array = Convert.ToBase64String(bytes);
+		var bytes = _targetTexture.EncodeToPNG();
+		var image64Array = Convert.ToBase64String(bytes);
 		// string bodyJsonString = "{\"image\": \"" + image64Array + "\"}";
 		// Debug.Log("Body JSON: " + bodyJsonString);
 
 		// Create a web request
 		var formData = new List<IMultipartFormSection>
 		{
-			new MultipartFormDataSection("image=" + image64Array)
+			new MultipartFormFileSection("image", bytes)
 		};
 		
 		var request = UnityWebRequest.Post(ScreenShotUrl, formData);
 		request.chunkedTransfer = false;
+		request.url = ScreenShotUrl;
 		
 		yield return request.SendWebRequest();
 
@@ -113,7 +114,7 @@ public class PhotoTaker : MonoBehaviour
 			if (request.isNetworkError)
 			{
 				Debug.LogError("NETWORK ERROR");
-				Debug.LogError("ERROR: " + request.error);
+				Debug.LogError(BitConverter.ToString(request.downloadHandler.data));
 				Debug.LogError(request.downloadHandler.text);
 				Debug.LogError(request.url);
 			}
