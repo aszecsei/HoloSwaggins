@@ -11,6 +11,7 @@ public class PhotoTaker : MonoBehaviour
 {
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
+
 	
 	private PhotoCapture _photoCapture;
 	private Texture2D _targetTexture;
@@ -21,8 +22,8 @@ public class PhotoTaker : MonoBehaviour
 	{
 		_cameraResolution =
 			PhotoCapture.SupportedResolutions.OrderByDescending((res) => res.width * res.height).First();
-		_targetTexture = new Texture2D(_cameraResolution.width, _cameraResolution.height);
-	}
+		_targetTexture = new Texture2D(_cameraResolution.width, _cameraResolution.height, TextureFormat.RGB24, true);
+    }
 	
 	// Update is called once per frame
 	private void Update () {
@@ -57,8 +58,11 @@ public class PhotoTaker : MonoBehaviour
 
 	private void OnCapturedPhotoToMemory(PhotoCapture.PhotoCaptureResult result, PhotoCaptureFrame photoCaptureFrame)
 	{
-		// Copy the raw image data into the target texture
-		photoCaptureFrame.UploadImageDataToTexture(_targetTexture);
+       
+
+
+        // Copy the raw image data into the target texture
+        photoCaptureFrame.UploadImageDataToTexture(_targetTexture);
 		
 		// Create a GameObject to which the texture can be applied
 		var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -90,16 +94,17 @@ public class PhotoTaker : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 
 		// Encode texture into PNG
-		var bytes = _targetTexture.EncodeToPNG();
+		var bytes = _targetTexture.EncodeToJPG();
 		var image64Array = Convert.ToBase64String(bytes);
-		// string bodyJsonString = "{\"image\": \"" + image64Array + "\"}";
-		// Debug.Log("Body JSON: " + bodyJsonString);
+        // string bodyJsonString = "{\"image\": \"" + image64Array + "\"}";
+        // Debug.Log("Body JSON: " + bodyJsonString);
 
-		// Create a web request
-		var formData = new List<IMultipartFormSection>
+
+        // Create a web request
+        var formData = new List<IMultipartFormSection>
 		{
 			new MultipartFormDataSection("image", image64Array)
-		};
+        };
 		
 		var request = UnityWebRequest.Post(ScreenShotUrl, formData);
 		request.chunkedTransfer = false;
