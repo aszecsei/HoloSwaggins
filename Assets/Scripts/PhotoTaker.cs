@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.XR.WSA.WebCam;
 
@@ -11,6 +12,7 @@ public class PhotoTaker : MonoBehaviour
 {
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
+	public GameObject TextMesh;
 
 	
 	private PhotoCapture _photoCapture;
@@ -123,6 +125,9 @@ public class PhotoTaker : MonoBehaviour
 		{
 			Debug.Log("STATUS: " + request.responseCode);
 			Debug.Log(request.downloadHandler.text);
+			var text = Instantiate<GameObject>(TextMesh);
+			var tm = text.GetComponent<TextMeshPro>();
+			tm.SetText(request.downloadHandler.text);
 		}
 	}
 }
