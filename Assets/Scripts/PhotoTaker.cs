@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.XR.WSA.WebCam;
 
 public class PhotoTaker : MonoBehaviour
 {
 	public Shader shader;
+	public string screenShotURL = "http://www.argon-key-218614.appspot.com/transcribe";
 	
 	private PhotoCapture photoCapture = null;
 	private Texture2D targetTexture = null;
@@ -63,6 +67,9 @@ public class PhotoTaker : MonoBehaviour
 		
 		quadRenderer.material.SetTexture("_MainTex", targetTexture);
 		
+		// Upload the photo
+		StartCoroutine(UploadPNG());
+		
 		// Deactivate the camera
 		photoCapture.StopPhotoModeAsync(OnStoppedPhotoMode);
 	}
@@ -72,5 +79,50 @@ public class PhotoTaker : MonoBehaviour
 		// Shutdown the photo capture resource
 		photoCapture.Dispose();
 		photoCapture = null;
+	}
+	
+	IEnumerator UploadPNG()
+	{
+		// We should only read the screen after all rendering is complete
+		yield return new WaitForEndOfFrame();
+
+		// Encode texture into PNG
+		byte[] bytes = targetTexture.EncodeToPNG();
+		string image64Array = Convert.ToBase64String(bytes);
+		// string bodyJsonString = "{\"image\": \"" + image64Array + "\"}";
+		// Debug.Log("Body JSON: " + bodyJsonString);
+
+		// Create a web request
+		List<IMultipartFormSection> formData = new List<IMultipartFormSection>
+		{
+			new MultipartFormDataSection("image=" + image64Array)
+		};
+		
+		UnityWebRequest request = UnityWebRequest.Post(screenShotURL, formData);
+		request.chunkedTransfer = false;
+		
+		yield return request.SendWebRequest();
+
+		if (request.isNetworkError || request.isHttpError)
+		{
+			Debug.LogError("STATUS: " + request.responseCode);
+			Debug.LogError(request.error);
+			if (request.isNetworkError)
+			{
+				Debug.LogError("NETWORK ERROR");
+				Debug.LogError("ERROR: " + request.error);
+				Debug.LogError(request.downloadHandler.text);
+				Debug.LogError(request.url);
+			}
+			else
+			{
+				Debug.LogError("HTTP ERROR");
+			}
+		}
+		else
+		{
+			Debug.Log("STATUS: " + request.responseCode);
+			Debug.Log(request.downloadHandler.text);
+		}
 	}
 }
