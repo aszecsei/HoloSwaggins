@@ -664,9 +664,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 9ea3add8-de31-45a4-bff6-fca0c4088a07
-  projectName: HoloSwaggins (1)
-  organizationId: lvbeek
+  cloudProjectId: 43ff668b-857f-4e35-9a82-d63aecbe98d3
+  projectName: HoloSwaggins
+  organizationId: alic-szecsei
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

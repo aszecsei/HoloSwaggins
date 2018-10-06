@@ -98,7 +98,7 @@ public class PhotoTaker : MonoBehaviour
 		// Create a web request
 		var formData = new List<IMultipartFormSection>
 		{
-			new MultipartFormFileSection("image", bytes)
+			new MultipartFormDataSection("image", image64Array)
 		};
 		
 		var request = UnityWebRequest.Post(ScreenShotUrl, formData);
@@ -111,17 +111,8 @@ public class PhotoTaker : MonoBehaviour
 		{
 			Debug.LogError("STATUS: " + request.responseCode);
 			Debug.LogError(request.error);
-			if (request.isNetworkError)
-			{
-				Debug.LogError("NETWORK ERROR");
-				Debug.LogError(BitConverter.ToString(request.downloadHandler.data));
-				Debug.LogError(request.downloadHandler.text);
-				Debug.LogError(request.url);
-			}
-			else
-			{
-				Debug.LogError("HTTP ERROR");
-			}
+			Debug.LogError(request.downloadHandler.text);
+			Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
 		}
 		else
 		{
