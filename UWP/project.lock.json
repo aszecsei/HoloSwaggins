@@ -12564,11 +12564,10 @@
       ]
     },
     "Microsoft.NETCore/5.0.0": {
-      "sha512": "E5BgLSTFu++AS0u8JiU/VqXcfEPL9sjn5DBXhCkKXXGx7T9b6SwqCzSWFNRlq+PbG7oiYveydun/Tqd/9sL/Kg==",
+      "sha512": "QQMp0yYQbIdfkKhdEE6Umh2Xonau7tasG36Trw/YlHoWgYQLp7T9L+ZD8EPvdj5ubRhtOuKEKwM7HMpkagB9ZA==",
       "type": "package",
       "path": "microsoft.netcore/5.0.0",
       "files": [
-        ".signature.p7s",
         "_._",
         "microsoft.netcore.5.0.0.nupkg.sha512",
         "microsoft.netcore.nuspec"
@@ -12754,11 +12753,10 @@
       ]
     },
     "Microsoft.NETCore.Targets.UniversalWindowsPlatform/5.0.0": {
-      "sha512": "fH8C8hojm2Pm4Y9wirsy2fapCS3TPIRk1zFn2PjR4OrYu743ACbI+BO1ZCiQESgjGz/efooS6xY8gifobT8kNA==",
+      "sha512": "jszcJ6okLlhqF4OQbhSbixLOuLUyVT3BP7Y7/i7fcDMwnHBd1Pmdz6M1Al9SMDKVLA2oSaItg4tq6C0ydv8lYQ==",
       "type": "package",
       "path": "microsoft.netcore.targets.universalwindowsplatform/5.0.0",
       "files": [
-        ".signature.p7s",
         "microsoft.netcore.targets.universalwindowsplatform.5.0.0.nupkg.sha512",
         "microsoft.netcore.targets.universalwindowsplatform.nuspec",
         "runtime.json"
@@ -15875,6 +15873,6 @@
   "tools": {},
   "projectFileToolGroups": {},
   "packageFolders": {
-    "C:\\Users\\docsz_000\\.nuget\\packages\\": {}
+    "C:\\Users\\laure\\.nuget\\packages\\": {}
   }
 }
