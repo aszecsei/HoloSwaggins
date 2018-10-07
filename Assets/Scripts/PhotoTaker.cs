@@ -15,9 +15,11 @@ public class PhotoTaker : MonoBehaviour
 	public GameObject TextMesh;
 	public Transform Cursor;
     public string lang;
+    public bool modelOn = false;
+    public string ModelUrl = "http://www.argon-key-218614.appspot.com/transcribe/model";
 
-	
-	private PhotoCapture _photoCapture;
+
+    private PhotoCapture _photoCapture;
 	private Texture2D _targetTexture;
 	private Resolution _cameraResolution;
 	
@@ -106,31 +108,60 @@ public class PhotoTaker : MonoBehaviour
         // Debug.Log("Body JSON: " + bodyJsonString);
 
 
-        // Create a web request
+        // Create formData for web request
         var formData = new List<IMultipartFormSection>
 		{
 			new MultipartFormDataSection("image", image64Array)
         };
-		
-		var request = UnityWebRequest.Post(ScreenShotUrl + "/" + lang, formData);
-		request.chunkedTransfer = false;
-		
-		yield return request.SendWebRequest();
 
-		if (request.isNetworkError || request.isHttpError)
-		{
-			Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
-			Debug.LogError("STATUS: " + request.responseCode);
-			Debug.LogError(request.error);
-			Debug.LogError(request.downloadHandler.text);
-		}
-		else
-		{
-			Debug.Log(request.downloadHandler.text);
-			var text = Instantiate<GameObject>(TextMesh);
-			text.transform.position = pos;
-			var tm = text.GetComponent<TextMeshPro>();
-			tm.SetText(request.downloadHandler.text);
-		}
-	}
+        // Create a web request
+        //RequestText(formData);
+        var request = UnityWebRequest.Post(ScreenShotUrl + "/" + lang, formData);
+        request.chunkedTransfer = false;
+
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
+            Debug.LogError("STATUS: " + request.responseCode);
+            Debug.LogError(request.error);
+            Debug.LogError(request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.Log(request.downloadHandler.text);
+            var text = Instantiate<GameObject>(TextMesh);
+            text.transform.position = Cursor.position;
+            var tm = text.GetComponent<TextMeshPro>();
+            tm.SetText(request.downloadHandler.text);
+        }
+
+
+        // Create a web request
+        if (modelOn)
+        {
+            //RequestModels(formData);
+            var modelRequest = UnityWebRequest.Post(ModelUrl, formData);
+            modelRequest.chunkedTransfer = false;
+
+            yield return modelRequest.SendWebRequest();
+
+            if (modelRequest.isNetworkError || modelRequest.isHttpError)
+            {
+                Debug.LogError(modelRequest.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
+                Debug.LogError("STATUS: " + modelRequest.responseCode);
+                Debug.LogError(modelRequest.error);
+                Debug.LogError(modelRequest.downloadHandler.text);
+            }
+            else
+            {
+                //Debug.Log(modelRequest.downloadHandler.text);
+                //var text = Instantiate<GameObject>(TextMesh);
+                //text.transform.position = Cursor.position;
+                //var tm = text.GetComponent<TextMeshPro>();
+                //tm.SetText(modelRequest.downloadHandler.text);
+            }
+        }
+    }
 }
