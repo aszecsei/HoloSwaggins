@@ -11,9 +11,15 @@ public class LanguageSelector : MonoBehaviour, IFocusable, IInputClickHandler
 	public PhotoTaker PhotoTaker;
 	private TextMeshPro _text;
 
+    private static LanguageSelector _selectedLanguage;
+
 	void Awake()
 	{
 		_text = transform.GetComponentInChildren<TextMeshPro>();
+        if (Language.Equals(""))
+        {
+            _selectedLanguage = this;
+        }
 	}
 
 	// Use this for initialization
@@ -28,16 +34,19 @@ public class LanguageSelector : MonoBehaviour, IFocusable, IInputClickHandler
 
 	public void OnFocusEnter()
 	{
-		_text.color = Color.yellow;
+		_text.color = _selectedLanguage == this ? Color.green : Color.yellow;
 	}
 
 	public void OnFocusExit()
 	{
-		_text.color = Color.white;
+		_text.color = _selectedLanguage == this ? Color.green : Color.white;
 	}
 
 	public void OnInputClicked(InputClickedEventData eventData)
 	{
 		PhotoTaker.lang = Language;
+        _selectedLanguage._text.color = Color.white;
+        _selectedLanguage = this;
+        _text.color = Color.green;
 	}
 }
