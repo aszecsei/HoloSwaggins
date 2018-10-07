@@ -13,10 +13,10 @@ produces:
 schemes:
 - "https"
 paths:
-  "/echo":
-    get:
+  "/transcribe/models":
+    post:
       description: "Echo back a given message."
-      operationId: "echo"
+      operationId: "transcribe"
       produces:
       - "application/json"
       responses:
@@ -31,6 +31,97 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/echoMessage"
+  "/transcribe":
+    post:
+      description: "Echo back a given message."
+      operationId: "transcribe"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+  "/transcribe/es":
+   post:
+      description: "Echo back a given message."
+      operationId: "transcribe/es"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+  "/transcribe/en":
+    post:
+      description: "Echo back a given message."
+      operationId: "transcribe/en"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+  "/transcribe/de":
+    post:
+      description: "Echo back a given message."
+      operationId: "transcribe/de"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+  "/transcribe/fr":
+   post:
+      description: "Echo back a given message."
+      operationId: "transcribe/fr"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+    
 definitions:
   echoMessage:
     type: "object"

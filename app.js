@@ -21,28 +21,175 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Buffer = require('safe-buffer').Buffer;
 const vision = require('@google-cloud/vision');
+const {Translate} = require('@google-cloud/translate');
+const projectId = 'argon-key-218614';
+const WordPOS = require('wordpos'),
+ wordpos = new WordPOS();
+// Instantiates a client
+const translate = new Translate();
 
+const client = new vision.ImageAnnotatorClient();
 const app = express();
-
+var multer = require('multer');
+var upload = multer();
 app.set('case sensitive routing', true);
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 app.use(bodyParser.json());
+app.use(upload.array()); 
+app.use(express.static('public'));
+
 // [END setup]
 
-app.get('/echo', (req, res) => {
-  res.status(200).json({ message: "Hi" }).end();
+app.post('/transcribe/models', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image.replace(/^data:image\/png;base64,/, ''),
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation.text;
+      return wordpos.getNouns(fullTextAnnotation)
+    })
+    .then(results =>{
+      res.status(200).send(JSON.stringify(results) );
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
 });
 
-function authInfoHandler (req, res) {
-  let authUser = { id: 'anonymous' };
-  const encodedInfo = req.get('X-Endpoint-API-UserInfo');
-  if (encodedInfo) {
-    authUser = JSON.parse(Buffer.from(encodedInfo, 'base64'));
-  }
-  res.status(200).json(authUser).end();
-}
 
-app.get('/auth/info/googlejwt', authInfoHandler);
-app.get('/auth/info/googleidtoken', authInfoHandler);
+app.post('/transcribe', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image.replace(/^data:image\/png;base64,/, ''),
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation;
+      console.log(fullTextAnnotation.text)
+      res.status(200).send(`${fullTextAnnotation.text}` );
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
+});
+
+app.post('/transcribe/es', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image,
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation;
+      return translate
+        .translate(`${fullTextAnnotation.text}`, 'es')
+    })
+    .then(results => {
+      const translation = results[0];
+      console.log(translation)
+      res.status(200).send(`${translation}` )
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
+});
+app.post('/transcribe/de', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image,
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation;
+      return translate
+        .translate(`${fullTextAnnotation.text}`, 'de')
+    })
+    .then(results => {
+      const translation = results[0];
+      console.log(translation)
+      res.status(200).send(`${translation}` )
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
+});
+app.post('/transcribe/en', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image,
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation;
+      return translate
+        .translate(`${fullTextAnnotation.text}`, 'en')
+    })
+    .then(results => {
+      const translation = results[0];
+      console.log(translation)
+      res.status(200).send(`${translation}` )
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
+});
+app.post('/transcribe/fr', (req, res) => {
+  const request = {
+    image: {
+      content: req.body.image,
+    },
+    feature: {
+      languageHints: ['en-t-i0-handwrit'],
+    },
+  };
+  client
+    .documentTextDetection(request)
+    .then(results => {
+      const fullTextAnnotation = results[0].fullTextAnnotation;
+      return translate
+        .translate(`${fullTextAnnotation.text}`, 'fr')
+    })
+    .then(results => {
+      const translation = results[0];
+      console.log(translation)
+      res.status(200).send(`${translation}` )
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    });
+});
+
+
+
 
 if (module === require.main) {
   // [START listen]
