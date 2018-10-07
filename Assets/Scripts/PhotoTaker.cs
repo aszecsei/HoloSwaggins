@@ -27,6 +27,7 @@ public class PhotoTaker : MonoBehaviour
 	private Resolution _cameraResolution;
 
     private GameObject _lastText;
+    private GameObject _loadingText;
 	
 	// Use this for initialization
 	private void Start ()
@@ -41,6 +42,15 @@ public class PhotoTaker : MonoBehaviour
 
 	private void TakePhoto()
 	{
+        var textPos = Vector3.Lerp(Cursor.position, Camera.main.transform.position, 0.1f);
+        var textRot = Camera.main.transform.rotation;
+
+        _loadingText = Instantiate<GameObject>(TextMesh);
+        _loadingText.transform.position = textPos;
+        _loadingText.transform.rotation = textRot;
+        var tm = _loadingText.GetComponent<TextMeshPro>();
+        tm.SetText("Scanning...");
+
 		// Create a PhotoCapture object
 		PhotoCapture.CreateAsync(false, delegate(PhotoCapture captureObject)
 		{
@@ -64,21 +74,14 @@ public class PhotoTaker : MonoBehaviour
 
 	private void OnCapturedPhotoToMemory(PhotoCapture.PhotoCaptureResult result, PhotoCaptureFrame photoCaptureFrame)
 	{
-       
+        _loadingText.GetComponent<TextMeshPro>().SetText("Uploading...");
 
 
         // Copy the raw image data into the target texture
         photoCaptureFrame.UploadImageDataToTexture(_targetTexture);
 		
 		// Create a GameObject to which the texture can be applied
-		var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-		var quadRenderer = quad.GetComponent<Renderer>();
-		quadRenderer.material = new Material(Shader);
-
-		quad.transform.parent = this.transform;
-		quad.transform.localPosition = new Vector3(0.0f, 0.0f, 3.0f);
 		
-		quadRenderer.material.SetTexture("_MainTex", _targetTexture);
 		
 		// Upload the photo
 		StartCoroutine(UploadPNG());
@@ -123,6 +126,8 @@ public class PhotoTaker : MonoBehaviour
         request.chunkedTransfer = true;
 
         yield return request.SendWebRequest();
+        Destroy(_loadingText);
+
         if (_lastText != null)
         {
             Destroy(_lastText);
@@ -131,6 +136,13 @@ public class PhotoTaker : MonoBehaviour
 
         GameObject text;
 
+        var textPos = Vector3.Lerp(pos, Camera.main.transform.position, 0.1f);
+        var textRot = Camera.main.transform.rotation;
+
+        text = Instantiate<GameObject>(TextMesh);
+        text.transform.position = textPos;
+        text.transform.rotation = textRot;
+
         if (request.isNetworkError || request.isHttpError)
         {
             Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
@@ -138,8 +150,7 @@ public class PhotoTaker : MonoBehaviour
             Debug.LogError(request.error);
             Debug.LogError(request.downloadHandler.text);
 
-            text = Instantiate<GameObject>(TextMesh);
-            text.transform.position = new Vector3(0, 0, 10);
+            
             var tm = text.GetComponent<TextMeshPro>();
 
             var sb = new StringBuilder();
@@ -161,8 +172,6 @@ public class PhotoTaker : MonoBehaviour
         else
         {
             Debug.Log(request.downloadHandler.text);
-            text = Instantiate<GameObject>(TextMesh);
-            text.transform.position = new Vector3(0, 0, 10);
             var tm = text.GetComponent<TextMeshPro>();
             tm.SetText(request.downloadHandler.text);
         }
