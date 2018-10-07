@@ -97,6 +97,8 @@ public class PhotoTaker : MonoBehaviour
 		// We should only read the screen after all rendering is complete
 		yield return new WaitForEndOfFrame();
 
+		var pos = Cursor.position;
+
 		// Encode texture into PNG
 		var bytes = _targetTexture.EncodeToJPG();
 		var image64Array = Convert.ToBase64String(bytes);
@@ -126,7 +128,7 @@ public class PhotoTaker : MonoBehaviour
 		{
 			Debug.Log(request.downloadHandler.text);
 			var text = Instantiate<GameObject>(TextMesh);
-			text.transform.position = Cursor.position;
+			text.transform.position = pos;
 			var tm = text.GetComponent<TextMeshPro>();
 			tm.SetText(request.downloadHandler.text);
 		}
