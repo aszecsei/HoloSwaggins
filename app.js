@@ -39,10 +39,13 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(bodyParser.json());
 app.use(upload.array()); 
 app.use(express.static('public'));
+const GoogleImages = require('google-images');
+
+const imclient = new GoogleImages('***REMOVED***', '***REMOVED***');
 
 // [END setup]
 
-app.post('/transcribe/models', (req, res) => {
+app.post('/transcribe/model', (req, res) => {
   const request = {
     image: {
       content: req.body.image.replace(/^data:image\/png;base64,/, ''),
@@ -50,7 +53,7 @@ app.post('/transcribe/models', (req, res) => {
     feature: {
       languageHints: ['en-t-i0-handwrit'],
     },
-  };
+  }; nm 
   client
     .documentTextDetection(request)
     .then(results => {
@@ -58,7 +61,23 @@ app.post('/transcribe/models', (req, res) => {
       return wordpos.getNouns(fullTextAnnotation)
     })
     .then(results =>{
-      res.status(200).send(JSON.stringify(results) );
+      if(results.length>3){
+        results = [results[0],results[results.length/2],results[results.length]]
+        let map = results.map((test)=>{
+          imclient.search(test).then(next=>{
+            return next ? next[0].url:null
+          })
+        })
+
+
+        res.status(200).send(JSON.stringify(map) );
+      }
+      let map = results.map((test)=>{
+        client.search(test).then(next=>{
+          return next ? next[0].url:null
+        })
+      })
+      res.status(200).send(JSON.stringify(map) );
     })
     .catch(err => {
       res.status(500).send(err)
@@ -80,7 +99,7 @@ app.post('/transcribe', (req, res) => {
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
       console.log(fullTextAnnotation.text)
-      res.status(200).send(`${fullTextAnnotation.text}` );
+      fullTextAnnotation.text ? res.status(200).send(`${fullTextAnnotation.text}` ) : res.status(200).send('No text' );
     })
     .catch(err => {
       res.status(500).send(err)
@@ -100,13 +119,19 @@ app.post('/transcribe/es', (req, res) => {
     .documentTextDetection(request)
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
-      return translate
-        .translate(`${fullTextAnnotation.text}`, 'es')
+      return fullTextAnnotation.text ?  translate
+        .translate(`${fullTextAnnotation.text}`, 'es'): res.status(200).send('No text' )
     })
     .then(results => {
       const translation = results[0];
       console.log(translation)
-      res.status(200).send(`${translation}` )
+      if(fullTextAnnotation.text){
+        return translate
+        .translate(`${fullTextAnnotation.text}`, 'es')
+      }
+      else{
+        res.status(200).send('No text' )
+      }
     })
     .catch(err => {
       res.status(500).send(err)
@@ -125,8 +150,13 @@ app.post('/transcribe/de', (req, res) => {
     .documentTextDetection(request)
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
-      return translate
+      if(fullTextAnnotation.text){
+        return translate
         .translate(`${fullTextAnnotation.text}`, 'de')
+      }
+      else{
+        res.status(200).send('No text' )
+      }
     })
     .then(results => {
       const translation = results[0];
@@ -150,8 +180,13 @@ app.post('/transcribe/en', (req, res) => {
     .documentTextDetection(request)
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
-      return translate
+      if(fullTextAnnotation.text){
+        return translate
         .translate(`${fullTextAnnotation.text}`, 'en')
+      }
+      else{
+        res.status(200).send('No text' )
+      }
     })
     .then(results => {
       const translation = results[0];
@@ -175,8 +210,13 @@ app.post('/transcribe/fr', (req, res) => {
     .documentTextDetection(request)
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
-      return translate
+      if(fullTextAnnotation.text){
+        return translate
         .translate(`${fullTextAnnotation.text}`, 'fr')
+      }
+      else{
+        res.status(200).send('No text' )
+      }
     })
     .then(results => {
       const translation = results[0];

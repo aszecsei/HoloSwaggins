@@ -23,6 +23,8 @@
     "@google-cloud/vision": "^0.22.1",
     "body-parser": "1.18.2",
     "express": "4.16.2",
+    "free-google-image-search": "^1.0.0",
+    "google-images": "^2.1.0",
     "multer": "^1.4.0",
     "safe-buffer": "5.1.1",
     "wordpos": "^1.2.0"

@@ -13,10 +13,10 @@ produces:
 schemes:
 - "https"
 paths:
-  "/transcribe/models":
+  "/transcribe/model":
     post:
       description: "Echo back a given message."
-      operationId: "transcribe"
+      operationId: "transcribe/model"
       produces:
       - "application/json"
       responses:
