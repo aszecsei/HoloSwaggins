@@ -13,6 +13,7 @@ public class PhotoTaker : MonoBehaviour
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
 	public GameObject TextMesh;
+    public string lang;
 
 	
 	private PhotoCapture _photoCapture;
@@ -108,9 +109,9 @@ public class PhotoTaker : MonoBehaviour
 			new MultipartFormDataSection("image", image64Array)
         };
 		
-		var request = UnityWebRequest.Post(ScreenShotUrl, formData);
+		var request = UnityWebRequest.Post(ScreenShotUrl + "/" + lang, formData);
 		request.chunkedTransfer = false;
-		request.url = ScreenShotUrl;
+		request.url = ScreenShotUrl + "/" + lang;
 		
 		yield return request.SendWebRequest();
 

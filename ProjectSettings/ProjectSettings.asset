@@ -564,11 +564,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HoloSwaggins
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 801c67c3e47cd501
   metroApplicationDescription: HoloSwaggins
   wsaImages: {}
   metroTileShortName: HoloSwaggins
