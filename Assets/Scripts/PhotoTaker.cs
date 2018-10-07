@@ -13,6 +13,7 @@ public class PhotoTaker : MonoBehaviour
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
 	public GameObject TextMesh;
+	public Transform Cursor;
 
 	
 	private PhotoCapture _photoCapture;
@@ -116,16 +117,16 @@ public class PhotoTaker : MonoBehaviour
 
 		if (request.isNetworkError || request.isHttpError)
 		{
+			Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
 			Debug.LogError("STATUS: " + request.responseCode);
 			Debug.LogError(request.error);
 			Debug.LogError(request.downloadHandler.text);
-			Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
 		}
 		else
 		{
-			Debug.Log("STATUS: " + request.responseCode);
 			Debug.Log(request.downloadHandler.text);
 			var text = Instantiate<GameObject>(TextMesh);
+			text.transform.position = Cursor.position;
 			var tm = text.GetComponent<TextMeshPro>();
 			tm.SetText(request.downloadHandler.text);
 		}
