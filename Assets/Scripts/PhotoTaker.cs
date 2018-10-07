@@ -4,11 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HoloToolkit.Unity.InputModule;
 using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.XR.WSA.WebCam;
 
-public class PhotoTaker : MonoBehaviour
+public class PhotoTaker : MonoBehaviour 
 {
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
@@ -30,12 +31,7 @@ public class PhotoTaker : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	private void Update () {
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			TakePhoto();
-		}
-	}
+	private void Update () { }
 
 	private void TakePhoto()
 	{
@@ -132,5 +128,10 @@ public class PhotoTaker : MonoBehaviour
 			var tm = text.GetComponent<TextMeshPro>();
 			tm.SetText(request.downloadHandler.text);
 		}
+	}
+
+	public void OnScan()
+	{
+		TakePhoto();
 	}
 }
