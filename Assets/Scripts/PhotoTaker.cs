@@ -4,11 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HoloToolkit.Unity.InputModule;
 using TMPro;
 using UnityEngine.Serialization;
 using UnityEngine.XR.WSA.WebCam;
 
-public class PhotoTaker : MonoBehaviour
+public class PhotoTaker : MonoBehaviour 
 {
 	[FormerlySerializedAs("shader")] public Shader Shader;
 	[FormerlySerializedAs("screenShotURL")] public string ScreenShotUrl = "http://www.argon-key-218614.appspot.com/transcribe";
@@ -32,12 +33,7 @@ public class PhotoTaker : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	private void Update () {
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			TakePhoto();
-		}
-	}
+	private void Update () { }
 
 	private void TakePhoto()
 	{
@@ -114,6 +110,7 @@ public class PhotoTaker : MonoBehaviour
 			new MultipartFormDataSection("image", image64Array)
         };
 
+<<<<<<< HEAD
         // Create a web request
         //RequestText(formData);
         var request = UnityWebRequest.Post(ScreenShotUrl + "/" + lang, formData);
@@ -164,4 +161,27 @@ public class PhotoTaker : MonoBehaviour
             }
         }
     }
+=======
+		if (request.isNetworkError || request.isHttpError)
+		{
+			Debug.LogError(request.isNetworkError ? "NETWORK ERROR" : "HTTP ERROR");
+			Debug.LogError("STATUS: " + request.responseCode);
+			Debug.LogError(request.error);
+			Debug.LogError(request.downloadHandler.text);
+		}
+		else
+		{
+			Debug.Log(request.downloadHandler.text);
+			var text = Instantiate<GameObject>(TextMesh);
+			text.transform.position = pos;
+			var tm = text.GetComponent<TextMeshPro>();
+			tm.SetText(request.downloadHandler.text);
+		}
+	}
+
+	public void OnScan()
+	{
+		TakePhoto();
+	}
+>>>>>>> 563824a8694334848d3225842ff4bc8543177435
 }
