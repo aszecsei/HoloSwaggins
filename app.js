@@ -119,12 +119,6 @@ app.post('/transcribe/es', (req, res) => {
     .documentTextDetection(request)
     .then(results => {
       const fullTextAnnotation = results[0].fullTextAnnotation;
-      return fullTextAnnotation.text ?  translate
-        .translate(`${fullTextAnnotation.text}`, 'es'): res.status(200).send('No text' )
-    })
-    .then(results => {
-      const translation = results[0];
-      console.log(translation)
       if(fullTextAnnotation.text){
         return translate
         .translate(`${fullTextAnnotation.text}`, 'es')
@@ -132,6 +126,11 @@ app.post('/transcribe/es', (req, res) => {
       else{
         res.status(200).send('No text' )
       }
+    })
+    .then(results => {
+      const translation = results[0];
+      console.log(translation)
+      res.status(200).send(`${translation}` )
     })
     .catch(err => {
       res.status(500).send(err)
